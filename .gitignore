@@ -1,0 +1,39 @@
+# Ignore target directory (compiled code and build artifacts)
+target/
+
+# Ignore Eclipse / IntelliJ / VS Code IDE files
+*.iml
+.idea/
+*.classpath
+*.project
+*.settings/
+.vscode/
+
+# Ignore OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temp files
+logs/
+*.log
+hs_err_pid*
+
+# Ignore dependency caches
+.mvn/
+*.m2/
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore JAR, WAR, and EAR files
+*.jar
+*.war
+*.ear
+
+# Ignore Maven Wrapper files
+mvnw
+mvnw.cmd
+
+# Ignore test reports
+surefire-reports/
+failsafe-reports/
