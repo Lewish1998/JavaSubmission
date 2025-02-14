@@ -1,4 +1,4 @@
-package com.cos;
+package com.cos.models;
 
 public class Customer {
 
@@ -11,6 +11,10 @@ public class Customer {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
+    }
+
+    public Customer(String string, String string2, double double1, boolean boolean1) {
+        //TODO Auto-generated constructor stub
     }
 
     // Getters and setters

@@ -1,18 +1,21 @@
-package com.cos;
+package com.cos.daos;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.cos.helpers.ConnectionManager;
+import com.cos.models.Customer;
+
 public class CustomerDao implements Dao<Customer> {
 
     public CustomerDao() {
-        // No more pointless in-memory list
+        
     }
 
     @Override
-    public Optional<Customer> get(long id) {
+    public Optional<Customer> get(long id) { // Change id to name ?
         String sql = "SELECT * FROM customers WHERE id = ?";
 
         try (Connection con = ConnectionManager.getConnection();

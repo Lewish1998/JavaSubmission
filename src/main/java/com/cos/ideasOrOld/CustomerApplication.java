@@ -1,6 +1,10 @@
-package com.cos;
+package com.cos.ideasOrOld;
 
 import java.util.Optional;
+
+import com.cos.daos.CustomerDao;
+import com.cos.daos.Dao;
+import com.cos.models.Customer;
 
 public class CustomerApplication {
 
