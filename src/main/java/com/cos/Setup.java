@@ -1,12 +1,18 @@
 package com.cos;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.cos.daos.CustomerDao;
 import com.cos.daos.ItemDao;
+import com.cos.daos.OrderDao;
+import com.cos.daos.OrderItemDao;
 import com.cos.helpers.ConnectionManager;
 import com.cos.models.Customer;
 import com.cos.models.Item;
+import com.cos.models.Order;
+import com.cos.models.OrderItem;
 
 public class Setup {
     static String url = "jdbc:mysql://localhost:3306/new_schema";
@@ -16,7 +22,10 @@ public class Setup {
     public static void main(String[] args) {
         CustomerDao cd = new CustomerDao();
         ItemDao id = new ItemDao();
+        OrderDao od = new OrderDao();
+        OrderItemDao oid = new OrderItemDao();
 
+        // # # # # # # # # # # # # # # # customers # # # # # # # # # # # # # # # 
         // String customerTable = "customers";
         dropTable("customers");
 
@@ -66,7 +75,7 @@ public class Setup {
         }
 
 
-
+        // # # # # # # # # # # # # # # # items # # # # # # # # # # # # # # # 
         // Create and add items
         dropTable("items");
 
@@ -112,6 +121,62 @@ public class Setup {
         for (Item item : id.getAll()) {
             System.out.println(item.getSku() + " " + item.getName() + " " + item.getPrice() + " " + item.isOnOffer());
         }
+
+
+
+
+
+
+
+
+
+        // # # # # # # # # # # # # # # # orders # # # # # # # # # # # # # # # 
+        // Drop order table
+        dropTable("orders");
+        
+        // Create order table
+        executeSQL("""
+                    CREATE TABLE IF NOT EXISTS orders (
+                        customer_id INTEGER,
+                        created_at TIMESTAMP,
+                        in_progress BOOLEAN,
+                        completed BOOLEAN,
+                        FOREIGN KEY (customer_id) REFERENCES customer(id)
+                    );
+                """);
+
+        OrderItem orderItem1 = new OrderItem(item1, 3, 0.75); // 3 apples at $0.75 each
+        OrderItem orderItem2 = new OrderItem(item2, 5, 0.50); // 5 bananas at $0.50 each
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem1);
+        orderItems.add(orderItem2);
+
+        Order order1 = new Order(customer5, orderItems);
+
+
+        od.save(order1);
+
+
+
+
+
+        // # # # # # # # # # # # # # # # order_items # # # # # # # # # # # # # # # 
+        // Drop order_items table
+        dropTable("orders");
+
+        // Create order_items table
+        executeSQL("""
+                    CREATE TABLE order_items (
+                        order_id INTEGER,
+                        item_id INTEGER,
+                        quantity INTEGER,
+                        price_at_time DOUBLE,
+                        PRIMARY KEY (order_id, item_id),
+                        FOREIGN KEY (order_id) REFERENCES orders(id),
+                        FOREIGN KEY (item_id) REFERENCES items(id)
+                    );
+                """);
 
     }
 
