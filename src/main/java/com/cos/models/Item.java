@@ -4,12 +4,13 @@ import java.nio.charset.Charset;
 import java.util.Random;
 
 public class Item {
-    String sku;
-    String name;
-    double price;
-    boolean onOffer;
+    private long id; // database auto incriments 
+    private String sku;
+    private String name;
+    private double price;
+    private boolean onOffer;
 
-    // Constructor
+    // Constructor without id (creation)
     public Item(String sku, String name, double price, boolean onOffer) {
         this.sku = sku;
         this.name = name;
@@ -17,7 +18,20 @@ public class Item {
         this.onOffer = onOffer;
     }
 
+    // Constructor with id (fetch)
+    public Item(long id, String sku, String name, double price, boolean onOffer) {
+        this.id = id;
+        this.sku = sku;
+        this.name = name;
+        this.price = price;
+        this.onOffer = onOffer;
+    }
+
     // Getters and setters 
+    public long getId() {
+        return id;
+    }
+
     public String getSku() {
         return sku;
     }

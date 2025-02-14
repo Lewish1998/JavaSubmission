@@ -2,22 +2,31 @@ package com.cos.models;
 
 public class Customer {
 
-    String fname;
-    String lname;
-    String email;
+    private long id; // database auto incriments 
+    private String fname;
+    private String lname;
+    private String email;
 
-    // Constructor
+    // Constructor without id (creation)
     public Customer(String fname, String lname, String email) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
     }
 
-    public Customer(String string, String string2, double double1, boolean boolean1) {
-        //TODO Auto-generated constructor stub
+    // Constructor with id (fetch)
+    public Customer(long id, String fname, String lname, String email) {
+        this.id = id;
+        this.fname = fname;
+        this.lname = lname;
+        this.email = email;
     }
 
     // Getters and setters
+    public long getId() {
+        return id;
+    }
+
     public String getFname() {
         return fname;
     }

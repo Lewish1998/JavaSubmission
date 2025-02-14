@@ -81,19 +81,20 @@ public class CustomerDao implements Dao<Customer> {
     }
 
     @Override
-    public void update(Customer customer, String[] params) {
-        if (params.length < 2) {
-            throw new IllegalArgumentException("Params must include fname and email");
+    public void update(Customer customer, Object[] params) {
+        if (params.length < 3) {
+            throw new IllegalArgumentException("Params must include fname, lname and email");
         }
 
-        String sql = "UPDATE customers SET fname = ?, email = ? WHERE email = ?";
+        String sql = "UPDATE customers SET fname = ?, lname = ?, email = ? WHERE id = ?";
 
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
-            stmt.setString(1, params[0]);
-            stmt.setString(2, params[1]);
-            stmt.setString(3, customer.getEmail());
+            stmt.setString(1, (String) params[0]);
+            stmt.setString(2, (String) params[1]);
+            stmt.setString(3, (String) params[2]);
+            stmt.setLong(4, customer.getId());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -103,12 +104,12 @@ public class CustomerDao implements Dao<Customer> {
 
     @Override
     public void delete(Customer customer) {
-        String sql = "DELETE FROM customers WHERE email = ?";
+        String sql = "DELETE FROM customers WHERE id = ?";
 
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
-            stmt.setString(1, customer.getEmail());
+            stmt.setLong(1, customer.getId());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
