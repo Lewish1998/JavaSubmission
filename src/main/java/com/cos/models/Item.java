@@ -1,8 +1,5 @@
 package com.cos.models;
 
-import java.nio.charset.Charset;
-import java.util.Random;
-
 public class Item {
     private long id; // database auto incriments 
     private String sku;
@@ -67,14 +64,5 @@ public class Item {
     public void setOnOffer(boolean onOffer) {
         this.onOffer = onOffer;
     }
-
-    // public String createRandomSku() {
-    //     byte[] array = new byte[12];
-    //     new Random().nextBytes(array);
-    //     String generatedString = new String(array, Charset.forName("UTF-8"));
-    //     System.out.println(generatedString);
-    //     this.sku = generatedString;
-    //     return generatedString;
-    // }
     
 }

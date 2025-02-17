@@ -2,13 +2,11 @@ package com.cos.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 import com.cos.helpers.ConnectionManager;
-import com.cos.models.Order;
 import com.cos.models.OrderItem;
 
 public class OrderItemDao implements Dao<OrderItem> {
@@ -25,11 +23,6 @@ public class OrderItemDao implements Dao<OrderItem> {
     public List<OrderItem> getAll() {
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
-
-
-
-
-
 
     @Override
     public void save(OrderItem orderItem) {
@@ -51,17 +44,6 @@ public class OrderItemDao implements Dao<OrderItem> {
         }
     }
 
-
-
-
-
-
-
-
-    // @Override
-    // public void save(OrderItem t) {
-    //     throw new UnsupportedOperationException("Unimplemented method 'save'");
-    // }
 
     @Override
     public void update(OrderItem t, Object[] params) {

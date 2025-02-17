@@ -1,5 +1,6 @@
 package com.cos.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -7,22 +8,37 @@ public class Order {
     private Customer customer;
     private List<OrderItem> orderItems;
     private String orderStatus;
-    private boolean isCompleted;
+    private boolean completed;
 
-    public Order(Customer customer, List<OrderItem> orderItems) {
+    // Constructor allowing empty orderItems initially
+    public Order(Customer customer) {
         this.customer = customer;
-        this.orderItems = orderItems;
+        this.orderItems = new ArrayList<>();  // Initialize with an empty list of order items
+        this.orderStatus = "Pending";  // Default status for new orders
+        this.completed = false;  // Default to not completed
     }
 
-    public Order(long id, Customer customer, List<OrderItem> orderItems) {
-        this.id = id;
+    // Constructor that includes order items
+    public Order(Customer customer, List<OrderItem> orderItems) {
+        // this.id = id;
         this.customer = customer;
         this.orderItems = orderItems;
+        this.orderStatus = "Pending";
+        this.completed = false;
+    }
+
+    // Add a new order item to the list
+    public void addOrderItem(OrderItem item) {
+        this.orderItems.add(item);
     }
 
     // Getters and setters
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Customer getCustomer() {
@@ -50,11 +66,10 @@ public class Order {
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
-    public void setCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
-    
 }

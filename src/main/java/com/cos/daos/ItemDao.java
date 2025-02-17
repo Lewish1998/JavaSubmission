@@ -1,6 +1,5 @@
 package com.cos.daos;
 
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import com.cos.helpers.ConnectionManager;
 import com.cos.models.Item;
@@ -20,7 +18,7 @@ public class ItemDao implements Dao<Item>{
     }
 
     @Override
-    public Optional<Item> get(long id) { // Change id to name ?
+    public Optional<Item> get(long id) {
         String sql = "SELECT * FROM items WHERE id = ?";
 
         try (Connection con = ConnectionManager.getConnection();

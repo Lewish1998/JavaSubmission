@@ -26,42 +26,41 @@ public class OrderDao implements Dao<Order> {
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
-@Override
-public void save(Order order) {
-    String sqlOrder = "INSERT INTO orders (customer_id, order_status, completed) VALUES (?, ?, ?)";
-    
-    try (Connection con = ConnectionManager.getConnection();
-         PreparedStatement stmtOrder = con.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS)) {
+    @Override
+    public void save(Order order) {
+        String sqlOrder = "INSERT INTO orders (customer_id, order_status, completed) VALUES (?, ?, ?)";
         
-        stmtOrder.setLong(1, order.getCustomer().getId());
-        stmtOrder.setString(2, order.getOrderStatus());
-        stmtOrder.setBoolean(3, order.isCompleted());
-        
-        stmtOrder.executeUpdate();
-        
-        ResultSet rs = stmtOrder.getGeneratedKeys();
-        if (rs.next()) {
-            long orderId = rs.getLong(1);
+        try (Connection con = ConnectionManager.getConnection();
+            PreparedStatement stmtOrder = con.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            
+            stmtOrder.setLong(1, order.getCustomer().getId());
+            stmtOrder.setString(2, order.getOrderStatus());
+            stmtOrder.setBoolean(3, order.isCompleted());
+            
+            stmtOrder.executeUpdate();
+            
+            ResultSet rs = stmtOrder.getGeneratedKeys();
+            if (rs.next()) {
+                long orderId = rs.getLong(1);
 
-            String sqlOrderItem = "INSERT INTO order_items (order_id, item_id, quantity, price_at_time) VALUES (?, ?, ?, ?)";
+                String sqlOrderItem = "INSERT INTO order_items (order_id, item_id, quantity, price_at_time) VALUES (?, ?, ?, ?)";
 
-            try (PreparedStatement stmtOrderItem = con.prepareStatement(sqlOrderItem)) {
-                // Insert the OrderItems
-                for (OrderItem orderItem : order.getOrderItems()) {
-                    stmtOrderItem.setLong(1, orderId);
-                    stmtOrderItem.setLong(2, orderItem.getItem().getId());
-                    stmtOrderItem.setInt(3, orderItem.getQuantity());
-                    stmtOrderItem.setDouble(4, orderItem.getPriceAtTime());
-                    stmtOrderItem.addBatch();
+                try (PreparedStatement stmtOrderItem = con.prepareStatement(sqlOrderItem)) {
+                    for (OrderItem orderItem : order.getOrderItems()) {
+                        stmtOrderItem.setLong(1, orderId);
+                        stmtOrderItem.setLong(2, orderItem.getItem().getId());
+                        stmtOrderItem.setInt(3, orderItem.getQuantity());
+                        stmtOrderItem.setDouble(4, orderItem.getPriceAtTime());
+                        stmtOrderItem.addBatch();
+                    }
+                    order.setId(rs.getLong(1));
+                    stmtOrderItem.executeBatch();
                 }
-
-                stmtOrderItem.executeBatch();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-}
 
 
     @Override

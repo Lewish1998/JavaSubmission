@@ -15,7 +15,7 @@ public class CustomerDao implements Dao<Customer> {
     }
 
     @Override
-    public Optional<Customer> get(long id) { // Change id to name ?
+    public Optional<Customer> get(long id) {
         String sql = "SELECT * FROM customers WHERE id = ?";
 
         try (Connection con = ConnectionManager.getConnection();
@@ -74,38 +74,18 @@ public class CustomerDao implements Dao<Customer> {
             stmt.setString(2, customer.getLname());
             stmt.setString(3, customer.getEmail());
             
-            // Execute the insert statement
             stmt.executeUpdate();
 
-            // Retrieve the generated customer ID
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 long generatedId = rs.getLong(1);
-                customer.setId(generatedId); // Set the generated ID to the customer object
+                customer.setId(generatedId);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-    // @Override
-    // public void save(Customer customer) {
-    //     String sql = "INSERT INTO customers (fname, lname, email) VALUES (?, ?, ?)";
-
-    //     try (Connection con = ConnectionManager.getConnection();
-    //          PreparedStatement stmt = con.prepareStatement(sql)) {
-
-    //         stmt.setString(1, customer.getFname());
-    //         stmt.setString(2, customer.getLname());
-    //         stmt.setString(3, customer.getEmail());
-    //         stmt.executeUpdate();
-
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 
     @Override
     public void update(Customer customer, Object[] params) {
