@@ -68,23 +68,33 @@ public class ItemDao implements Dao<Item>{
         return items;
     }
 
+
     @Override
     public void save(Item item) {
         String sql = "INSERT INTO items (sku, name, price, on_offer) VALUES (?, ?, ?, ?)";
 
         try (Connection con = ConnectionManager.getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)) {
+            PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, item.getSku());
             stmt.setString(2, item.getName());
             stmt.setDouble(3, item.getPrice());
             stmt.setBoolean(4, item.isOnOffer());
+            
             stmt.executeUpdate();
+            
+            // Retrieve and set the generated ID
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                long generatedId = rs.getLong(1);
+                item.setId(generatedId);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
 
     @Override
     public void update(Item item, Object[] params) {

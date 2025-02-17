@@ -131,17 +131,22 @@ public class Setup {
 
 
         // # # # # # # # # # # # # # # # orders # # # # # # # # # # # # # # # 
+        Customer customer6 = new Customer("xxx", "xxx", "xxx@gmail.com");
+        cd.save(customer6);
+        System.out.println(customer6.getId());
         // Drop order table
         dropTable("orders");
         
         // Create order table
         executeSQL("""
                     CREATE TABLE IF NOT EXISTS orders (
+                        id SERIAL PRIMARY KEY,
                         customer_id INTEGER,
                         created_at TIMESTAMP,
                         in_progress BOOLEAN,
+                        order_status VARCHAR(100),
                         completed BOOLEAN,
-                        FOREIGN KEY (customer_id) REFERENCES customer(id)
+                        FOREIGN KEY (customer_id) REFERENCES customers(id)
                     );
                 """);
 
@@ -152,8 +157,7 @@ public class Setup {
         orderItems.add(orderItem1);
         orderItems.add(orderItem2);
 
-        Order order1 = new Order(customer5, orderItems);
-
+        Order order1 = new Order(customer6, orderItems);
 
         od.save(order1);
 
@@ -163,20 +167,24 @@ public class Setup {
 
         // # # # # # # # # # # # # # # # order_items # # # # # # # # # # # # # # # 
         // Drop order_items table
-        dropTable("orders");
+        dropTable("order_items");
 
         // Create order_items table
         executeSQL("""
                     CREATE TABLE order_items (
+                        id SERIAL PRIMARY KEY,
                         order_id INTEGER,
                         item_id INTEGER,
                         quantity INTEGER,
-                        price_at_time DOUBLE,
-                        PRIMARY KEY (order_id, item_id),
+                        price_at_time FLOAT,
+                        UNIQUE (order_id, item_id),
+                        -- PRIMARY KEY (order_id, item_id),
                         FOREIGN KEY (order_id) REFERENCES orders(id),
                         FOREIGN KEY (item_id) REFERENCES items(id)
                     );
                 """);
+
+        od.save(order1);
 
     }
 
@@ -187,11 +195,11 @@ public class Setup {
 
 
 
+    // # # # # # # # # # # # # # # # methods # # # # # # # # # # # # # # # 
 
 
     public static void dropTable(String table) {
-        String sql = String.format("DROP TABLE IF EXISTS %s;", table);
-
+        String sql = String.format("DROP TABLE IF EXISTS %s CASCADE;", table);
         try (Connection con = ConnectionManager.getConnection();
              Statement stmt = con.createStatement()) {
             stmt.execute(sql);
@@ -214,43 +222,6 @@ public class Setup {
                 e.printStackTrace();
             }
         }
-
-
-    public static void createCustomerTable(String table) {
-        // mysql code
-        // String sql = String.format("""
-        //             CREATE TABLE IF NOT EXISTS %s (
-        //                 id INT AUTO_INCREMENT PRIMARY KEY,
-        //                 fname VARCHAR(50) NOT NULL,
-        //                 lname VARCHAR(50) NOT NULL,
-        //                 email VARCHAR(100) UNIQUE NOT NULL
-        //             );
-        //         """, table);
-
-        // psql code
-        String sql = String.format("""
-                    CREATE TABLE IF NOT EXISTS %s (
-                        id SERIAL PRIMARY KEY,
-                        fname VARCHAR(50) NOT NULL,
-                        lname VARCHAR(50) NOT NULL,
-                        email VARCHAR(100) UNIQUE NOT NULL
-                    );
-                """, table);
-
-        try (Connection con = ConnectionManager.getConnection();
-             Statement stmt = con.createStatement()) {
-
-            stmt.execute(sql);
-            System.out.println("Table created successfully.");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addCustomer() {
-
-    }
 
 
 }

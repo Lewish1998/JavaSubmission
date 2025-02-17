@@ -28,7 +28,7 @@ public class OrderDao implements Dao<Order> {
 
 @Override
 public void save(Order order) {
-    String sqlOrder = "INSERT INTO orders (customer_id, order_status, is_completed) VALUES (?, ?, ?)";
+    String sqlOrder = "INSERT INTO orders (customer_id, order_status, completed) VALUES (?, ?, ?)";
     
     try (Connection con = ConnectionManager.getConnection();
          PreparedStatement stmtOrder = con.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS)) {
